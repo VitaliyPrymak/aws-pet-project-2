@@ -24,3 +24,35 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install  # Install dependencies
     - run: npm test     # Run tests (you should define tests in package.json)
+name: Node.js CI/CD
+
+on:
+  push:
+    branches: 
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    - run: npm install
+    - run: npm test
+
+  deploy:
+    needs: build  # Run this job only if the build (tests) succeeds
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Deploy to Heroku
+      run: |
+        git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+        git push heroku main
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
