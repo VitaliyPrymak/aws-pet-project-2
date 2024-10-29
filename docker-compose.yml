@@ -9,9 +9,9 @@ services:
     depends_on:
       - backend_rds  # Ensure backend services start before frontend
       - backend_redis
-    environment:
-      - REACT_APP_BACKEND_RDS_URL=http://backend_rds:4000  # Backend RDS URL
-      - REACT_APP_BACKEND_REDIS_URL=http://backend_redis:5000  # Backend Redis URL
+    # environment:
+    #   - REACT_APP_BACKEND_RDS_URL=http://backend_rds:4000  # Backend RDS URL
+    #   - REACT_APP_BACKEND_REDIS_URL=http://backend_redis:5000  # Backend Redis URL
     networks:
       - app-network  # Connect frontend to the network
 

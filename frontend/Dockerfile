@@ -1,13 +1,17 @@
-# Use the official Nginx image from the Docker Hub
+# Use an official Nginx runtime
 FROM nginx:alpine
 
 # Set the working directory in the container
 WORKDIR /usr/share/nginx/html
 
-# Copy the static files from your project to the container
-COPY . .
+# Copy index.html and config.json
+COPY ./templates/index.html config.json ./
 
-# Expose port 80 for the Nginx server
-EXPOSE 80
+# Set file permissions
+RUN chmod 644 index.html config.json
 
-# No CMD is required as Nginx will run by default
+# Copy default Nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
