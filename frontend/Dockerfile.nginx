@@ -1,0 +1,13 @@
+# Dockerfile for Nginx to serve frontend
+
+# Use official Nginx image
+FROM nginx:latest
+
+# Copy the frontend build files to Nginx’s default directory
+COPY ./build /usr/share/nginx/html
+
+# Copy the custom Nginx configuration file
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 80
+EXPOSE 80

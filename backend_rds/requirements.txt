@@ -2,7 +2,7 @@
 # backendrds/requirements.txt
 
 Django==3.2
-psycopg2
+psycopg2-binary  # Use the binary package instead
 requests
 django-hosts
 django-cors-headers

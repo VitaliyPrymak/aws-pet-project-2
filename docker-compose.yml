@@ -1,0 +1,84 @@
+services:
+  # Frontend service
+  frontend:
+    build:
+      context: ./frontend  # Path to the frontend directory
+      dockerfile: Dockerfile  # Dockerfile inside the frontend directory
+    ports:
+      - "80:80"  # Map port 3000 for the frontend
+    depends_on:
+      - backend_rds  # Ensure backend services start before frontend
+      - backend_redis
+    environment:
+      - REACT_APP_BACKEND_RDS_URL=http://backend_rds:4000  # Backend RDS URL
+      - REACT_APP_BACKEND_REDIS_URL=http://backend_redis:5000  # Backend Redis URL
+    networks:
+      - app-network  # Connect frontend to the network
+
+  # Backend RDS service (e.g., Node.js + PostgreSQL)
+  backend_rds:
+    build:
+      context: ./backend_rds  # Path to the backend_rds directory
+      dockerfile: Dockerfile  # Dockerfile inside the backend_rds directory
+    depends_on:
+      - db  # Ensure the database starts before backend_rds
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=myuser
+      - DB_PASSWORD=mypassword
+      - DB_NAME=mydatabase
+      - CORS_ALLOWED_ORIGINS=http://localhost:3000  # Removed spaces around '='
+    networks:
+      - app-network  # Connect backend_rds to the network
+
+  # Backend Redis service (e.g., Node.js with Redis)
+  backend_redis:
+    build:
+      context: ./backend_redis  # Path to the backend_redis directory
+      dockerfile: Dockerfile  # Dockerfile inside the backend_redis directory
+   
+    depends_on:
+      - redis  # Ensure Redis service starts before backend_redis
+    environment:
+      - REDIS_HOST=redis  # Redis service name
+      - REDIS_PORT=6379  # Default Redis port
+      - NODE_ENV=development  # Set environment to development (optional)
+      - CORS_ALLOWED_ORIGINS=http://localhost:3000
+    command: python manage.py runserver 0.0.0.0:5000
+    networks:
+      - app-network  # Define network for communication
+
+  # PostgreSQL service (for backend_rds)
+  db:
+    image: postgres:13  # Use PostgreSQL version 13
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"  # Expose PostgreSQL on port 5432
+    volumes:
+      - db_data:/var/lib/postgresql/data  # Persist database data
+    networks:
+      - app-network  # Connect db to the network
+
+  # Redis service
+  redis:
+    image: redis:latest  # or "redis:6"
+    ports:
+      - "6379:6379"  # Expose Redis on port 6379
+    networks:
+      - app-network  # Connect Redis to the same network as backend_redis
+
+networks:
+  app-network:
+    driver: bridge
+
+# Volumes for persisting data
+volumes:
+  redis_data:
+    driver: local  # Persist Redis data
+  db_data:
+    driver: local  # Persist PostgreSQL data
+
