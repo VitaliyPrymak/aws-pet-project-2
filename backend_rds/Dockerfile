@@ -1,9 +1,7 @@
-# Use the official Python image from the Docker Hub
 FROM python:3.9-slim
 
 RUN apt-get update && apt-get install -y libpq-dev gcc
 
-# Set the working directory in the container
 WORKDIR /usr/src/app
 
 # Copy the requirements file to the working directory
