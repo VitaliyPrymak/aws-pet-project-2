@@ -1,6 +1,8 @@
 # Use the official Python image from the Docker Hub
 FROM python:3.9-slim
 
+RUN apt-get update && apt-get install -y libpq-dev gcc
+
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
@@ -22,8 +24,7 @@ ENV DB_PASSWORD=mypassword
 ENV DB_NAME=mydatabase
 
 # Expose the application's port (e.g., 5000 for Flask)
-EXPOSE 5000
+EXPOSE 4000
 
 # Command to run the application
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-
+CMD ["python", "manage.py", "runserver", "0.0.0.0:4000"]

@@ -11,7 +11,7 @@ services:
       - backend_redis
     # environment:
     #   - REACT_APP_BACKEND_RDS_URL=http://backend_rds:4000  # Backend RDS URL
-    #   - REACT_APP_BACKEND_REDIS_URL=http://backend_redis:5000  # Backend Redis URL
+    #   - REACT_APP_BACKEND_REDIS_URL=http://backend_redis:6000  # Backend Redis URL
     networks:
       - app-network  # Connect frontend to the network
 
@@ -20,6 +20,8 @@ services:
     build:
       context: ./backend_rds  # Path to the backend_rds directory
       dockerfile: Dockerfile  # Dockerfile inside the backend_rds directory
+    ports:
+      - "4000:4000"
     depends_on:
       - db  # Ensure the database starts before backend_rds
     environment:
@@ -37,6 +39,8 @@ services:
     build:
       context: ./backend_redis  # Path to the backend_redis directory
       dockerfile: Dockerfile  # Dockerfile inside the backend_redis directory
+    ports:
+      - "3000:3000"
    
     depends_on:
       - redis  # Ensure Redis service starts before backend_redis
@@ -45,7 +49,7 @@ services:
       - REDIS_PORT=6379  # Default Redis port
       - NODE_ENV=development  # Set environment to development (optional)
       - CORS_ALLOWED_ORIGINS=http://localhost:3000
-    command: python manage.py runserver 0.0.0.0:5000
+    command: python manage.py runserver 0.0.0.0:3000
     networks:
       - app-network  # Define network for communication
 
@@ -81,4 +85,3 @@ volumes:
     driver: local  # Persist Redis data
   db_data:
     driver: local  # Persist PostgreSQL data
-
