@@ -32,8 +32,8 @@ jobs:
       - name: build and push
         run: |
           docker build -t backend_redis:latest -f backend_redis/Dockerfile backend_redis
-          docker tag backend_redis:latest 021891587435.dkr.ecr.us-east-1.amazonaws.com/backend-redis:latest
-          docker push 021891587435.dkr.ecr.us-east-1.amazonaws.com/backend-redis:latest
+          docker tag backend_redis:latest 021891587435.dkr.ecr.us-east-1.amazonaws.com/backend_redis:latest
+          docker push 021891587435.dkr.ecr.us-east-1.amazonaws.com/backend_redis:latest
 
 
       - name: Install SSH client
