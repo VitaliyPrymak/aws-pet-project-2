@@ -56,5 +56,5 @@ jobs:
           ssh -o ConnectTimeout=10 -i ~/.ssh/ec2_private_key.pem ec2-user@${{ secrets.ELASTIC_IP }} << EOF
           aws ecr get-login-password --region ${{ secrets.AWS_DEFAULT_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REDIS }}
           docker pull ${{ secrets.ECR_REDIS }}:latest
-          docker-compose up -d
+          docker-compose up -d backend_redis
           EOF
