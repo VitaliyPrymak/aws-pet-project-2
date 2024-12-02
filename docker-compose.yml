@@ -5,7 +5,7 @@ services:
       context: ./frontend  # Path to the frontend directory
       dockerfile: Dockerfile  # Dockerfile inside the frontend directory
     ports:
-      - "80:80"  # Map port 3000 for the frontend
+      - "80:80"  
     depends_on:
       - backend_rds  # Ensure backend services start before frontend
       - backend_redis
